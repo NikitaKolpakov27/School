@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Klass {
     public String name;
-    private final List<Student> students; //private final
+    private final List<Student> students;
     public Map<Integer, List<GregorianCalendar>> schedule;
     public int klassId;
 

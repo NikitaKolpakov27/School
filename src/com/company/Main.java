@@ -225,6 +225,39 @@ public class Main {
         }
         System.out.println("---------------------");
 
+        //удаление студента
+//        System.out.println("Удаление студента из 7а (): ");
+//        System.out.println("---------------------");
+//        Student removingStudent = klassManager.getStudents(0).get(0);
+//        System.out.println("Удаляется студент: " + removingStudent.toString());
+//        klassManager.removeStudent(removingStudent, 0);
+//        System.out.println("---------------------");
+
+        //Вывод студентов 7а
+        System.out.println("Ученики " + klassManager.klasses.get(0).name + " класса:");
+        System.out.println("-----------------");
+        for (Student student : klassManager.getStudents(0)) {
+            System.out.println(student.toString());
+        }
+        System.out.println("-----------------");
+
+        //добавление студента
+//        System.out.println("Добавление студента в 7а (): ");
+//        System.out.println("---------------------");
+//        int newID = studentManager.students.size();
+//        Student addingStudent = new Student("Мария", "Яснеева", "Евгеньева", 0, newID);
+//        System.out.println("Добавляется студент: " + addingStudent.toString());
+//        klassManager.addStudent(addingStudent, 0);
+//        System.out.println("---------------------");
+
+        //Вывод студентов 7а
+        System.out.println("Ученики " + klassManager.klasses.get(0).name + " класса:");
+        System.out.println("-----------------");
+        for (Student student : klassManager.getStudents(0)) {
+            System.out.println(student.toString());
+        }
+        System.out.println("-----------------");
+
 
 
 

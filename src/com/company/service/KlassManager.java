@@ -4,6 +4,7 @@ import com.company.Main;
 import com.company.model.Klass;
 import com.company.model.Student;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -61,15 +62,29 @@ public class KlassManager {
         }
     }
 
-    public void editSchedule(Klass klass, HashMap<Integer, List<GregorianCalendar>> schedule) {
-        klass.schedule = schedule;
+    public void editSchedule(int klassID, HashMap<Integer, List<GregorianCalendar>> schedule) {
+        this.klasses.get(klassID).schedule = schedule;
     }
 
-    public void removeStudent(Student student, int klassID) {
+    public void removeStudent(Student student, int klassID) throws SQLException {
         this.klasses.get(klassID).removeStudent(student);
+        TestConnection.statement.executeUpdate("Delete from school.students where studID = " + student.studID);
     }
 
-    public void addStudent(int klassID, Student student) {
+    public void addStudent(Student student, int klassID) throws SQLException {
+        this.klasses.get(klassID).addStudent(student);
+        String sql = "INSERT INTO school.students (studID, classID, name, surname, patronymic) VALUES (?, ?, ?, ?, ?)";
+
+        PreparedStatement preparedStatement = TestConnection.connection.prepareStatement(sql);
+        preparedStatement.setInt(1, student.studID);
+        preparedStatement.setInt(2, klassID);
+        preparedStatement.setString(3, student.name);
+        preparedStatement.setString(4, student.surname);
+        preparedStatement.setString(5, student.patronymic);
+        preparedStatement.executeUpdate();
+    }
+
+    private void addStudent_inner(Student student, int klassID) throws SQLException {
         this.klasses.get(klassID).addStudent(student);
     }
 
@@ -83,12 +98,12 @@ public class KlassManager {
             ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.students");
             while (resultSet.next()) {
 
-                if (Integer.parseInt(resultSet.getString(2)) == pair.getKey()) {
-                    addStudent(
-                            Integer.parseInt(resultSet.getString(2)),
+                if (resultSet.getInt(2) == pair.getKey()) {
+                    addStudent_inner(
                             new Student((resultSet.getString(3)), resultSet.getString(4),
-                                    resultSet.getString(5), Integer.parseInt(resultSet.getString(2)),
-                                    Integer.parseInt(resultSet.getString(1)))
+                                    resultSet.getString(5), resultSet.getInt(2),
+                                    resultSet.getInt(1)),
+                            resultSet.getInt(2)
                             );
                 }
             }
@@ -97,20 +112,29 @@ public class KlassManager {
 
     private void setSchedule() throws SQLException {
         ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.schedule");
-        System.out.println("Check: ");
         List<GregorianCalendar> dates = new ArrayList<>();
+        HashMap<Integer, List<GregorianCalendar>> newMap = new HashMap<>();
 
+        int subjCount = 0;
         while (resultSet.next()) {
-            dates.add(
-                    new GregorianCalendar(
-                        Integer.parseInt(resultSet.getString(5)),
-                        Integer.parseInt(resultSet.getString(4)) - 1,
-                        Integer.parseInt(resultSet.getString(3))
-                        )
+            int subjID = resultSet.getInt(2);
+
+            if (subjID != subjCount) {
+                dates = new ArrayList<>();
+                subjCount = subjID;
+            }
+
+            dates.add(new GregorianCalendar(
+                    resultSet.getInt(5),
+                    resultSet.getInt(4) - 1,
+                    resultSet.getInt(3))
             );
-            this.klasses.get(Integer.parseInt(resultSet.getString(1))).schedule.put(
-                    Integer.parseInt(resultSet.getString(2)), dates
+
+            this.klasses.get(resultSet.getInt(1)).schedule.put(
+                    subjID, dates
             );
+            //dates = new ArrayList<>();
+
         }
     }
 }

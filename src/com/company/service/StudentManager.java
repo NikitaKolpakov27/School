@@ -52,7 +52,6 @@ public class StudentManager {
         setGrades();
     }
 
-//    public HashMap<Integer, List<Short>> getStudentGrades(int studID) {
     public HashMap<String, List<Short>> getStudentGrades(int studID) {
         HashMap<String, List<Short>> new_grades = new HashMap<>();
         for (Map.Entry<Integer, List<Short>> pair : this.students.get(studID).grades.entrySet()) {
@@ -70,7 +69,17 @@ public class StudentManager {
     }
 
     public void addGradeBySubject(short new_grade, int subjectID, int studID) {
-        HashMap<Integer, List<Short>> grades = this.students.get(studID).grades;
+
+        //TODO: ЭТОГО НЕ БЫЛО! ОНО САМО!!!!!!!!!!!!!!!
+        HashMap<Integer, List<Short>> grades;
+
+        try {
+            grades = this.students.get(studID).grades;
+        } catch (NullPointerException e) {
+            grades = new HashMap<>();
+        }
+        //TODO
+
         List<Short> grades_wo_subj;
 
         try {
@@ -89,7 +98,6 @@ public class StudentManager {
 
     private void setGrades() throws SQLException {
         ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.newgrades");
-        //todo: вместо цифр 0 и 1 нужно подставить названия предметов!!!
         while (resultSet.next()) {
 
             addGradeBySubject(
@@ -100,6 +108,7 @@ public class StudentManager {
 
         }
         System.out.println("====");
+        resultSet.close();
     }
 
 }
