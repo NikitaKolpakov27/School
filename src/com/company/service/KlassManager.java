@@ -52,8 +52,7 @@ public class KlassManager {
         return this.klasses.get(klassID).schedule;
     }
 
-    //TODO: Вместо цифр должны выводиться названия предметов!!!
-    //TODO: Возможно, следует поменять местами Integer и List<> для удобства
+
     public void getStringSchedule(int klassID) {
         var schedule = getSchedule(klassID);
         System.out.println("Расписание для " + klasses.get(klassID).name + ":");

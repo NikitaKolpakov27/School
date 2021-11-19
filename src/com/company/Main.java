@@ -1,9 +1,6 @@
 package com.company;
 
-import com.company.model.Klass;
-import com.company.model.School;
-import com.company.model.Student;
-import com.company.model.Subject;
+import com.company.model.*;
 import com.company.service.*;
 
 import javax.swing.*;
@@ -41,6 +38,16 @@ public class Main {
     static {
         try {
             subjectManager = new SubjectManager();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static UserManager userManager;
+
+    static {
+        try {
+            userManager = new UserManager();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -138,20 +145,7 @@ public class Main {
         studentManager.setStudentGrades(grades_apa, 0);
     }
 
-
-
-    public static void main(String[] args) throws IOException, SQLException {
-//        createSchedule_7a();
-//        createGrades();
-//        Оценки Алисы Дементьевой
-//        System.out.println(studentManager.getStudentGrades(1));
-//
-//        //Поставить Алисе Дементьевой 3-ку по русскому
-//        studentManager.addGradeBySubject((short) 3, 0, 1);
-//        System.out.println(studentManager.getStudentGrades(1));
-//
-
-
+    public static void demonstration() {
         //Вывод студентов 7а
         System.out.println("Ученики " + klassManager.klasses.get(0).name + " класса:");
         System.out.println("-----------------");
@@ -177,7 +171,6 @@ public class Main {
         System.out.println("-----------------");
 
 
-
         System.out.println("Оценки учеников(вне зависимости от класса):");
         System.out.println("-----------------");
         for (Map.Entry<Integer, Student> pair: studentManager.students.entrySet()) {
@@ -189,17 +182,11 @@ public class Main {
 
             for (Map.Entry<Integer, List<Short>> par : pair.getValue().grades.entrySet()) {
                 str += subjectManager.subjects.get(par.getKey()) + " = " + par.getValue();
-
-//                System.out.println("ID = " + pair.getKey() + "; " + pair.getValue().toString() + "; " +
-//                        str);
                 str += " ";
             }
 
             System.out.println("ID = " + pair.getKey() + "; " + pair.getValue().toString() + "; " +
                     str);
-
-//            System.out.println("ID = " + pair.getKey() + "; " + pair.getValue().toString() + "; "
-//                    + pair.getValue().grades);
         }
         System.out.println("-----------------");
 
@@ -257,37 +244,13 @@ public class Main {
             System.out.println(student.toString());
         }
         System.out.println("-----------------");
+    }
 
 
 
-
-
-
-//        createSchedule_7a();
-
-//        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.students");
-//        List<Student> studentList = new ArrayList<>();
-//        while (resultSet.next()) {
-//
-//            studentList.add(
-//                    new Student(resultSet.getString(3), resultSet.getString(4),
-//                            resultSet.getString(5), Integer.parseInt(resultSet.getString(2)),
-//                            Integer.parseInt(resultSet.getString(1))));
-//        }
-//
-//        for (Student st : studentList) {
-//            System.out.println(st.toNewString());
-//        }
-//
-//        resultSet = TestConnection.statement.executeQuery("Select * from school.newgrades");
-//        while (resultSet.next()) {
-//            System.out.println(resultSet.getString(1) + " " + resultSet.getString(2) + " "
-//                    + Integer.parseInt(resultSet.getString(3)) + " " + resultSet.getString(4));
-//        }
-
-
-
-
-
+    public static void main(String[] args) throws IOException, SQLException {
+        //demonstration();
+        Authorisation authorisation = new Authorisation();
+        authorisation.greetings();
     }
 }

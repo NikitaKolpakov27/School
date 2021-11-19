@@ -15,28 +15,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class StudentManager {
-    //Студенты
-//    public static final Student alex = new Student("Алексей", "Петров",
-//            "Алексеевич", 0, 0);
-//    public static final Student alice = new Student("Алиса", "Дементьева",
-//            "Филипповна", 0, 1);
-//    public static final Student leo = new Student("Леонид", "Рожков",
-//            "Денисович", 0, 2);
-
-
-    public final Map<Integer, Student> students; //map
+    public final Map<Integer, Student> students;
 
     public StudentManager() throws SQLException {
-//        this.students = List.of(alice, alex, leo).stream().collect(Collectors.toMap(
-//                student -> student.studID,
-//                Function.identity()
-//        ));
 
         ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.students");
         List<Student> studentList = new ArrayList<>();
         while (resultSet.next()) {
 
-            //added at 14.11
             studentList.add(
                     new Student(resultSet.getString(3), resultSet.getString(4),
                             resultSet.getString(5), Integer.parseInt(resultSet.getString(2)),
@@ -64,7 +50,6 @@ public class StudentManager {
                 new_grades.put("Математика", pair.getValue());
             }
         }
-//        return this.students.get(studID).grades;
         return new_grades;
     }
 
