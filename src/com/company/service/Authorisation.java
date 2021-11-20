@@ -28,6 +28,7 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
         System.out.println("Введите \"r\", чтобы зарегестрироваться, и \"in\", чтобы войти.");
         System.out.println("--------------------------");
         System.out.println("Ввод: ");
+
         Scanner scn = new Scanner(System.in);
         String answer = scn.nextLine();
 

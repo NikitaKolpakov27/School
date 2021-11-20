@@ -3,6 +3,7 @@ package com.company.service;
 import com.company.Main;
 import com.company.model.Klass;
 import com.company.model.Student;
+import com.company.model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,16 +16,11 @@ public class KlassManager {
     public final Map<Integer, Klass> klasses;
 
     public KlassManager() throws SQLException {
-//        this.klasses = List.of(klass_7a, klass_8b).stream().collect(Collectors.toMap(
-//                klass -> klass.klassId,
-//                Function.identity()
-//        ));
 
         ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.klasses");
         List<Klass> klassesList = new ArrayList<>();
         while (resultSet.next()) {
 
-            //added at 14.11
             klassesList.add(
                     new Klass(resultSet.getString(2), Integer.parseInt(resultSet.getString(1)))
             );
@@ -39,10 +35,29 @@ public class KlassManager {
         setSchedule();
     }
 
-    public void renameKlass(String name, int klassID) {
+    public void removeKlass(Klass klass) throws SQLException {
+        this.klasses.remove(klass.klassId);
+        TestConnection.statement.executeUpdate("Delete from school.klasses where klassID = " + klass.klassId);
+    }
+
+
+    public void addKlass(Klass klass) throws SQLException {
+        int newId = this.klasses.size();
+        this.klasses.put(newId, klass);
+
+        String sql = "INSERT INTO school.klasses (klassID, name) VALUES (?, ?)";
+
+        PreparedStatement preparedStatement = TestConnection.connection.prepareStatement(sql);
+        preparedStatement.setInt(1, klass.klassId);
+        preparedStatement.setString(2, klass.name);
+        preparedStatement.executeUpdate();
+    }
+
+    public void renameKlass(String name, int klassID) throws SQLException {
         Klass klass = this.klasses.get(klassID);
         if (klass.getStudents().size() > 30) {
-            klass.name = name; //мб пометить name protected и связать классМенеджер и класс
+            klass.name = name;
+            TestConnection.statement.executeUpdate("Update school.klasses Set name = " + name);
         } else {
             System.out.println("It's not necessary to rename this class.");
         }
