@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
-    static KlassManager klassManager;
+    public static KlassManager klassManager;
 
     static {
         try {
