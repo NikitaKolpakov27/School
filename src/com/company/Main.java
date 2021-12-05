@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -145,7 +147,7 @@ public class Main {
         studentManager.setStudentGrades(grades_apa, 0);
     }
 
-    public static void demonstration() {
+    public static void demonstration() throws SQLException {
         //Вывод студентов 7а
         System.out.println("Ученики " + klassManager.klasses.get(0).name + " класса:");
         System.out.println("-----------------");
@@ -198,12 +200,27 @@ public class Main {
         System.out.println("-----------------");
 
         Map<Integer, List<GregorianCalendar>> schedule = klassManager.getSchedule(0);
+        //added
+        Map<Integer, List<Timestamp>> sched = klassManager.klasses.get(0).sched;
 
 
+//        System.out.println("Расписание (для 7а): ");
+//        System.out.println("---------------------");
+//        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+//        for (Map.Entry<Integer, List<GregorianCalendar>> pair : schedule.entrySet()) {
+//            List<String> dateList = new ArrayList<>();
+//            for (int i = 0; i < pair.getValue().size(); i++) {
+//                dateList.add(df.format(pair.getValue().get(i).getTime()));
+//            }
+//            System.out.println(subjectManager.subjects.get(pair.getKey()) + " = " + dateList);
+//        }
+//        System.out.println("---------------------");
+
+        // new, with timestamp
         System.out.println("Расписание (для 7а): ");
         System.out.println("---------------------");
         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        for (Map.Entry<Integer, List<GregorianCalendar>> pair : schedule.entrySet()) {
+        for (Map.Entry<Integer, List<Timestamp>> pair : sched.entrySet()) {
             List<String> dateList = new ArrayList<>();
             for (int i = 0; i < pair.getValue().size(); i++) {
                 dateList.add(df.format(pair.getValue().get(i).getTime()));
@@ -220,21 +237,21 @@ public class Main {
 //        klassManager.removeStudent(removingStudent, 0);
 //        System.out.println("---------------------");
 
-        //Вывод студентов 7а
-        System.out.println("Ученики " + klassManager.klasses.get(0).name + " класса:");
+        //Вывод студентов 8а
+        System.out.println("Ученики " + klassManager.klasses.get(1).name + " класса:");
         System.out.println("-----------------");
-        for (Student student : klassManager.getStudents(0)) {
+        for (Student student : klassManager.getStudents(1)) {
             System.out.println(student.toString());
         }
         System.out.println("-----------------");
 
         //добавление студента
-//        System.out.println("Добавление студента в 7а (): ");
+//        System.out.println("Добавление студента в 8б (): ");
 //        System.out.println("---------------------");
 //        int newID = studentManager.students.size();
-//        Student addingStudent = new Student("Мария", "Яснеева", "Евгеньева", 0, newID);
+//        Student addingStudent = new Student("Николай", "Яснеев", "Евгеньевич", 1, newID);
 //        System.out.println("Добавляется студент: " + addingStudent.toString());
-//        klassManager.addStudent(addingStudent, 0);
+//        klassManager.addStudent(addingStudent, 1);
 //        System.out.println("---------------------");
 
         //Вывод студентов 7а
@@ -244,13 +261,45 @@ public class Main {
             System.out.println(student.toString());
         }
         System.out.println("-----------------");
+
+
+        //изменинение оценок
+//        Student stud = studentManager.students.get(0);
+//        studentManager.addGradeBySubject((short)2, 0, 2);
+//        System.out.println();
+//
+//        System.out.println("Оценки учеников(вне зависимости от класса):");
+//        System.out.println("-----------------");
+//        for (Map.Entry<Integer, Student> pair: studentManager.students.entrySet()) {
+//
+//            String str = "ОЦЕНКИ: ";
+//            if (pair.getValue().grades.entrySet().size() == 0) {
+//                str += "Пока нет оценок.";
+//            }
+//
+//            for (Map.Entry<Integer, List<Short>> par : pair.getValue().grades.entrySet()) {
+//                str += subjectManager.subjects.get(par.getKey()) + " = " + par.getValue();
+//                str += " ";
+//            }
+//
+//            System.out.println("ID = " + pair.getKey() + "; " + pair.getValue().toString() + "; " +
+//                    str);
+//        }
+//        System.out.println("-----------------");
+//
+//        System.out.println("Предметы:");
+//        System.out.println("-----------------");
+//        for (Map.Entry<Integer, Subject> pair: subjectManager.subjects.entrySet()) {
+//            System.out.println("ID = " + pair.getKey() + "; " + pair.getValue().toString() + ";");
+//        }
+//        System.out.println("-----------------");
     }
 
 
 
     public static void main(String[] args) throws IOException, SQLException {
-        //demonstration();
-        Authorisation authorisation = new Authorisation();
-        authorisation.greetings();
+        demonstration();
+//        Authorisation authorisation = new Authorisation();
+//        authorisation.greetings();
     }
 }

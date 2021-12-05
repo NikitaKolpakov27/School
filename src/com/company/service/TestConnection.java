@@ -1,6 +1,11 @@
 package com.company.service;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TestConnection {
     public static final String USER_NAME = "root";
@@ -19,7 +24,8 @@ public class TestConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-            connection.setAutoCommit(true);
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         }
@@ -34,10 +40,27 @@ public class TestConnection {
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        ResultSet resultSet = statement.executeQuery("Select * from school.students");
+//        ResultSet resultSet = statement.executeQuery("Select * from test_school.grades");
+//        List<Short> grades_short = new ArrayList<>();
+//        String str = "";
+//        while (resultSet.next()) {
+//            str += resultSet.getString(4);
+//        }
+//        List<String> array = Arrays.asList(str.split(","));
+//        System.out.println("String list: " + array);
+//
+//        for (String st : array) {
+//            grades_short.add(Short.parseShort(st));
+//        }
+//
+//        System.out.println("Short list: " + grades_short);
+
+        ResultSet resultSet = statement.executeQuery("Select * from test_school.newschedule");
+        DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm");
         while (resultSet.next()) {
-            System.out.println(resultSet.getString(2) + " " + resultSet.getString(3) + " "
-            + resultSet.getString(4));
+//            System.out.println(df.format(resultSet.getTimestamp(4)));
+            Timestamp date = resultSet.getTimestamp(4);
+            System.out.println(date);
         }
     }
 

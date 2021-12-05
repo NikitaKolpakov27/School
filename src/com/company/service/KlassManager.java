@@ -4,10 +4,12 @@ import com.company.Main;
 import com.company.model.Klass;
 import com.company.model.Student;
 import com.company.model.User;
+import com.company.other.New;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -33,15 +35,20 @@ public class KlassManager {
 
         setStudents();
         setSchedule();
+        //TestConnection.connection.close();
     }
 
     public void removeKlass(Klass klass) throws SQLException {
+        TestConnection.connection.setAutoCommit(false);
         this.klasses.remove(klass.klassId);
         TestConnection.statement.executeUpdate("Delete from school.klasses where klassID = " + klass.klassId);
+        TestConnection.connection.commit();
+        TestConnection.connection.setAutoCommit(true);
     }
 
 
     public void addKlass(Klass klass) throws SQLException {
+        TestConnection.connection.setAutoCommit(false);
         int newId = this.klasses.size();
         this.klasses.put(newId, klass);
 
@@ -51,13 +58,18 @@ public class KlassManager {
         preparedStatement.setInt(1, klass.klassId);
         preparedStatement.setString(2, klass.name);
         preparedStatement.executeUpdate();
+        TestConnection.connection.commit();
+        TestConnection.connection.setAutoCommit(true);
     }
 
     public void renameKlass(String name, int klassID) throws SQLException {
+        TestConnection.connection.setAutoCommit(false);
         Klass klass = this.klasses.get(klassID);
         if (klass.getStudents().size() > 30) {
             klass.name = name;
             TestConnection.statement.executeUpdate("Update school.klasses Set name = " + name);
+            TestConnection.connection.commit();
+            TestConnection.connection.setAutoCommit(true);
         } else {
             System.out.println("It's not necessary to rename this class.");
         }
@@ -81,11 +93,17 @@ public class KlassManager {
     }
 
     public void removeStudent(Student student, int klassID) throws SQLException {
+        TestConnection.connection.setAutoCommit(false);
         this.klasses.get(klassID).removeStudent(student);
         TestConnection.statement.executeUpdate("Delete from school.students where studID = " + student.studID);
+        TestConnection.connection.commit();
+        TestConnection.connection.setAutoCommit(true);
+
+        //TestConnection.connection.close();
     }
 
     public void addStudent(Student student, int klassID) throws SQLException {
+        TestConnection.connection.setAutoCommit(false);
         this.klasses.get(klassID).addStudent(student);
         String sql = "INSERT INTO school.students (studID, classID, name, surname, patronymic) VALUES (?, ?, ?, ?, ?)";
 
@@ -96,6 +114,10 @@ public class KlassManager {
         preparedStatement.setString(4, student.surname);
         preparedStatement.setString(5, student.patronymic);
         preparedStatement.executeUpdate();
+        TestConnection.connection.commit();
+        TestConnection.connection.setAutoCommit(true);
+
+       //TestConnection.connection.close();
     }
 
     private void addStudent_inner(Student student, int klassID) throws SQLException {
@@ -108,6 +130,7 @@ public class KlassManager {
     }
 
     private void setStudents() throws SQLException {
+        TestConnection.connection.setAutoCommit(false);
         for (Map.Entry<Integer, Klass> pair : klasses.entrySet()) {
             ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.students");
             while (resultSet.next()) {
@@ -122,33 +145,67 @@ public class KlassManager {
                 }
             }
         }
+        TestConnection.connection.commit();
+        TestConnection.connection.setAutoCommit(true);
+        //TestConnection.connection.close();
     }
 
+//    private void setSchedule() throws SQLException {
+//        TestConnection.connection.setAutoCommit(false);
+//        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.schedule");
+//        List<GregorianCalendar> dates = new ArrayList<>();
+//        HashMap<Integer, List<GregorianCalendar>> newMap = new HashMap<>();
+//
+//        int subjCount = 0;
+//        while (resultSet.next()) {
+//            int subjID = resultSet.getInt(2);
+//
+//            if (subjID != subjCount) {
+//                dates = new ArrayList<>();
+//                subjCount = subjID;
+//            }
+//
+//            dates.add(new GregorianCalendar(
+//                    resultSet.getInt(5),
+//                    resultSet.getInt(4) - 1,
+//                    resultSet.getInt(3))
+//            );
+//
+//            this.klasses.get(resultSet.getInt(1)).schedule.put(
+//                    subjID, dates
+//            );
+//            //dates = new ArrayList<>();
+//
+//        }
+//        TestConnection.connection.commit();
+//        TestConnection.connection.setAutoCommit(true);
+//        //TestConnection.connection.close();
+//    }
+
+    @New
     private void setSchedule() throws SQLException {
-        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.schedule");
-        List<GregorianCalendar> dates = new ArrayList<>();
-        HashMap<Integer, List<GregorianCalendar>> newMap = new HashMap<>();
+        TestConnection.connection.setAutoCommit(false);
+        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from test_school.newschedule");
+        List<Timestamp> dates = new ArrayList<>();
+        HashMap<Integer, List<Timestamp>> newMap = new HashMap<>();
 
         int subjCount = 0;
         while (resultSet.next()) {
-            int subjID = resultSet.getInt(2);
+            int subjID = resultSet.getInt(3);
 
             if (subjID != subjCount) {
                 dates = new ArrayList<>();
                 subjCount = subjID;
             }
 
-            dates.add(new GregorianCalendar(
-                    resultSet.getInt(5),
-                    resultSet.getInt(4) - 1,
-                    resultSet.getInt(3))
-            );
+            dates.add(resultSet.getTimestamp(4));
 
-            this.klasses.get(resultSet.getInt(1)).schedule.put(
+            this.klasses.get(resultSet.getInt(2)).sched.put(
                     subjID, dates
             );
-            //dates = new ArrayList<>();
 
         }
+        TestConnection.connection.commit();
+        TestConnection.connection.setAutoCommit(true);
     }
 }

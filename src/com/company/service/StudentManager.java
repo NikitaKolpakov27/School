@@ -4,13 +4,11 @@ import com.company.Main;
 import com.company.model.Klass;
 import com.company.model.Student;
 import com.company.model.Subject;
+import com.company.other.New;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,8 +23,8 @@ public class StudentManager {
 
             studentList.add(
                     new Student(resultSet.getString(3), resultSet.getString(4),
-                            resultSet.getString(5), Integer.parseInt(resultSet.getString(2)),
-                            Integer.parseInt(resultSet.getString(1)))
+                            resultSet.getString(5), resultSet.getInt(2),
+                            resultSet.getInt(1))
             );
         }
 
@@ -81,18 +79,38 @@ public class StudentManager {
         this.students.get(studID).grades = grades;
     }
 
-    private void setGrades() throws SQLException {
-        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.newgrades");
-        while (resultSet.next()) {
+//    private void setGrades() throws SQLException {
+//        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.newgrades");
+//        while (resultSet.next()) {
+//
+//            addGradeBySubject(
+//                    Short.parseShort(resultSet.getString(4)),
+//                    Integer.parseInt(resultSet.getString(3)),
+//                    Integer.parseInt(resultSet.getString(1))
+//            );
+//
+//        }
+//        System.out.println("====");
+//        resultSet.close();
+//    }
 
-            addGradeBySubject(
-                    Short.parseShort(resultSet.getString(4)),
-                    Integer.parseInt(resultSet.getString(3)),
-                    Integer.parseInt(resultSet.getString(1))
-            );
+    @New
+    private void setGrades() throws SQLException {
+        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from test_school.grades");
+        while (resultSet.next()) {
+            int subjID = resultSet.getInt(2);
+            int studID = resultSet.getInt(3);
+            List<String> grades = Arrays.asList(resultSet.getString(4).split(","));
+
+            for (String str : grades) {
+                addGradeBySubject(
+                        Short.parseShort(str),
+                        subjID,
+                        studID
+                );
+            }
 
         }
-        System.out.println("====");
         resultSet.close();
     }
 
