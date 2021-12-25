@@ -11,13 +11,13 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Главная страница</title>
   </head>
-  <body>
-    <label>Войдите или зарегистрируйтесь</label>
-    <form action="${pageContext.request.contextPath}/login">
+  <body style="font-size:17pt">
+    <label style="font-size:17pt">Войдите или зарегистрируйтесь</label>
+    <form style="font-size:17pt" action="${pageContext.request.contextPath}/login">
         <button type="submit">Войти</button>
     </form>
 
-    <form action="${pageContext.request.contextPath}/registration">
+    <form style="font-size:17pt" action="${pageContext.request.contextPath}/registration">
       <button type="submit">Зарегистрироваться</button>
     </form>
 

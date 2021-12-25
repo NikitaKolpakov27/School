@@ -16,8 +16,9 @@
 </head>
 <body>
 
-    <label>Welcome, <%= request.getParameter("login") %> Please, choose what you want to do:</label>
+    <label style="font-size:17pt">Welcome, [<%= request.getParameter("login") %>] Please, choose what you want to do:</label>
 
+    <br>
     <br>
 
     <form action="${pageContext.request.contextPath}/choice" method="post">
@@ -51,7 +52,7 @@
     <br>
 
     <form action="${pageContext.request.contextPath}/choice" method="post">
-        <input type="submit" name="button" value="exit">
+        <input type="submit" name="button" value="Exit">
     </form>
 
 

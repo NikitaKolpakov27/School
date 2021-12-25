@@ -18,7 +18,7 @@
         <fieldset>
             <legend>Registration</legend>
             <label>Login<input name="login" type="text" /></label>
-            <label>Password<input name="password" type="text" /></label>
+            <label>Password<input name="password" type="password" /></label>
         </fieldset>
         <button type="submit">OK</button>
     </form>

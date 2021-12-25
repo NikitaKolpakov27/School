@@ -49,13 +49,14 @@ public class ChoiceServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String get = request.getParameter("button");
-//        System.out.println(get);
+        System.out.println(get);
 
         switch (get) {
             case ("Display students"):
                 out.println("Students: ");
                 for (Map.Entry<Integer, Student> pair : studentManager.students.entrySet()) {
-                    out.println(pair.getKey() + " = " + pair.getValue().toString());
+                    out.println(pair.getKey() + " = " + pair.getValue().toString() + "; From " +
+                            klassManager.klasses.get(pair.getValue().klassId).name + " class");
                 }
                 break;
             case ("Display class schedule"):  //Расписание всех классов
@@ -68,15 +69,11 @@ public class ChoiceServlet extends HttpServlet {
                     out.println("---------------------");
                     DateFormat df = new SimpleDateFormat("dd MMM yyyy");
 
+                    if (schedule.isEmpty()) {
+                        out.println("Schedule for this class is not created yet.");
+                    }
+
                     for (Map.Entry<Integer, List<Timestamp>> pair1 : schedule.entrySet()) {
-
-                        out.println("shedule");
-
-                        //hm...
-                        if (schedule.isEmpty()) {
-                            out.println("Schedule for this class is not created yet.");
-                            break;
-                        }
 
                         List<String> dateList = new ArrayList<>();
                         for (int i = 0; i < pair1.getValue().size(); i++) {
@@ -88,12 +85,13 @@ public class ChoiceServlet extends HttpServlet {
                     out.println();
                 }
                 break;
+
             case ("Display students grades"):
                 for (Map.Entry<Integer, Student> pair: studentManager.students.entrySet()) {
 
-                    String str = "ОЦЕНКИ: ";
+                    String str = "GRADES: ";
                     if (pair.getValue().grades.entrySet().size() == 0) {
-                        str += "Пока нет оценок.";
+                        str += "There is not grades yet.";
                     }
 
                     for (Map.Entry<Integer, List<Short>> par : pair.getValue().grades.entrySet()) {
@@ -105,15 +103,19 @@ public class ChoiceServlet extends HttpServlet {
                             str);
                 }
                 break;
+
             case ("Take a grade to the student"):
-                out.println("IN process!");
+                response.sendRedirect("takeGrade.jsp");
                 break;
+
             case ("Add student"):
-                out.println("IN process!");
+                response.sendRedirect("addStud.jsp");
                 break;
+
             case ("Remove student"):
-                out.println("IN process!");
+                response.sendRedirect("delStud.jsp");
                 break;
+
             case ("Display subjects"):
                 out.println("Subjects:");
                 out.println("-----------------");
@@ -123,8 +125,9 @@ public class ChoiceServlet extends HttpServlet {
                 out.println("-----------------");
                 out.println();
                 break;
-            default:
-                out.println("work in progress");
+
+            case ("Exit"):
+                response.sendRedirect("/School_war_exploded");
                 break;
 
 

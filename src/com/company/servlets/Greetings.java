@@ -25,26 +25,14 @@ public class Greetings extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-//        response.getWriter().append("Served at: ").append(request.getContextPath());
-//
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-//        dispatcher.forward(request,response);
+        response.getWriter().append("Served at: ").append(request.getContextPath());
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+        dispatcher.forward(request,response);
 
         response.setCharacterEncoding("UTF-8");
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
-        PrintWriter printWriter = response.getWriter();
-        int id = userManager.users.size();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-
-//        try {
-//            dataBaseService.SignIn(login,password);
-//            response.sendRedirect("/home.jsp");
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
     }
 }

@@ -39,4 +39,31 @@
         <servlet-name>ChoiceServlet</servlet-name>
         <url-pattern>/choice</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddStudentServlet</servlet-name>
+        <servlet-class>com.company.servlets.AddStudentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddStudentServlet</servlet-name>
+        <url-pattern>/add-student</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RemoveStudentServlet</servlet-name>
+        <servlet-class>com.company.servlets.RemoveStudentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RemoveStudentServlet</servlet-name>
+        <url-pattern>/remove-student</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GivingGradeServlet</servlet-name>
+        <servlet-class>com.company.servlets.GivingGradeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GivingGradeServlet</servlet-name>
+        <url-pattern>/giving-grade</url-pattern>
+    </servlet-mapping>
 </web-app>

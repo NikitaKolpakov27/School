@@ -38,16 +38,7 @@ public class StudentManager {
     }
 
     public void addGradeBySubject(short new_grade, int subjectID, int studID) throws SQLException {
-//        TestConnection.connection.setAutoCommit(false);
-//        ResultSet resultSet = TestConnection.statement.executeQuery("Select grades_list from test_school.grades where " +
-//                "studID = " + studID + " and subjID = " + subjectID);
-//        String old_str = "";
-//        while (resultSet.next()) {
-//            old_str = resultSet.getString(1);
-//        }
-
         HashMap<Integer, List<Short>> grades;
-
         try {
             grades = this.students.get(studID).grades;
         } catch (NullPointerException e) {
@@ -64,12 +55,6 @@ public class StudentManager {
 
         grades_wo_subj.add(new_grade);
         grades.put(subjectID, grades_wo_subj);
-//        String new_str = old_str + "," + String.valueOf(new_grade);
-//
-//        String sql = "UPDATE test_school.grades SET grades_list = ?";
-//        PreparedStatement statement = TestConnection.connection.prepareStatement(sql);
-//        statement.setString(1, new_str);
-//        statement.executeUpdate();
     }
 
     public void setStudentGrades(HashMap<Integer, List<Short>> grades, int studID) {
