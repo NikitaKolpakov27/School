@@ -6,6 +6,7 @@ import com.company.model.Student;
 import com.company.model.Subject;
 import com.company.other.New;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -36,24 +37,15 @@ public class StudentManager {
         setGrades();
     }
 
-    public HashMap<String, List<Short>> getStudentGrades(int studID) {
-        HashMap<String, List<Short>> new_grades = new HashMap<>();
-        for (Map.Entry<Integer, List<Short>> pair : this.students.get(studID).grades.entrySet()) {
-            //todo: не очень удобно
-            if (pair.getKey() == 0) {
-                new_grades.put("Русский язык", pair.getValue());
-            }
+    public void addGradeBySubject(short new_grade, int subjectID, int studID) throws SQLException {
+//        TestConnection.connection.setAutoCommit(false);
+//        ResultSet resultSet = TestConnection.statement.executeQuery("Select grades_list from test_school.grades where " +
+//                "studID = " + studID + " and subjID = " + subjectID);
+//        String old_str = "";
+//        while (resultSet.next()) {
+//            old_str = resultSet.getString(1);
+//        }
 
-            if (pair.getKey() == 1) {
-                new_grades.put("Математика", pair.getValue());
-            }
-        }
-        return new_grades;
-    }
-
-    public void addGradeBySubject(short new_grade, int subjectID, int studID) {
-
-        //TODO: ЭТОГО НЕ БЫЛО! ОНО САМО!!!!!!!!!!!!!!!
         HashMap<Integer, List<Short>> grades;
 
         try {
@@ -61,7 +53,6 @@ public class StudentManager {
         } catch (NullPointerException e) {
             grades = new HashMap<>();
         }
-        //TODO
 
         List<Short> grades_wo_subj;
 
@@ -73,26 +64,42 @@ public class StudentManager {
 
         grades_wo_subj.add(new_grade);
         grades.put(subjectID, grades_wo_subj);
+//        String new_str = old_str + "," + String.valueOf(new_grade);
+//
+//        String sql = "UPDATE test_school.grades SET grades_list = ?";
+//        PreparedStatement statement = TestConnection.connection.prepareStatement(sql);
+//        statement.setString(1, new_str);
+//        statement.executeUpdate();
     }
 
     public void setStudentGrades(HashMap<Integer, List<Short>> grades, int studID) {
         this.students.get(studID).grades = grades;
     }
 
-//    private void setGrades() throws SQLException {
-//        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from school.newgrades");
-//        while (resultSet.next()) {
+
+    public void addFromSysToDB() throws SQLException {
+        System.out.println("GRADES: ");
+        for (Map.Entry<Integer, Student> pair : students.entrySet()) {
+            System.out.println(pair.getValue().name + " = " + pair.getValue().grades);
+
+
+//            TestConnection.connection.setAutoCommit(false);
+//            ResultSet resultSet = TestConnection.statement.executeQuery("Select * from test_school.grades where " +
+//                    "studID = " + 0 + " and subjID = " + 0);
+//            String old_str = "";
+//            int id = 0;
+//            while (resultSet.next()) {
+//                id = resultSet.getInt(1);
+//                old_str = resultSet.getString(4);
+//            }
 //
-//            addGradeBySubject(
-//                    Short.parseShort(resultSet.getString(4)),
-//                    Integer.parseInt(resultSet.getString(3)),
-//                    Integer.parseInt(resultSet.getString(1))
-//            );
-//
-//        }
-//        System.out.println("====");
-//        resultSet.close();
-//    }
+//            String new_str = "'" + String.valueOf(pair.getValue().grades.values()) + "'";
+//            String sql = "UPDATE test_school.grades SET grades_list = ? where gradeID = " + id;
+//            PreparedStatement statement = TestConnection.connection.prepareStatement(sql);
+//            statement.setString(1, new_str);
+//            statement.executeUpdate();
+        }
+    }
 
     @New
     private void setGrades() throws SQLException {
@@ -100,7 +107,8 @@ public class StudentManager {
         while (resultSet.next()) {
             int subjID = resultSet.getInt(2);
             int studID = resultSet.getInt(3);
-            List<String> grades = Arrays.asList(resultSet.getString(4).split(","));
+            String grades_str = resultSet.getString(4);
+            List<String> grades = Arrays.asList(grades_str.split(","));
 
             for (String str : grades) {
                 addGradeBySubject(

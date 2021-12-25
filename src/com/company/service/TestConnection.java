@@ -55,13 +55,51 @@ public class TestConnection {
 //
 //        System.out.println("Short list: " + grades_short);
 
-        ResultSet resultSet = statement.executeQuery("Select * from test_school.newschedule");
-        DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm");
-        while (resultSet.next()) {
-//            System.out.println(df.format(resultSet.getTimestamp(4)));
-            Timestamp date = resultSet.getTimestamp(4);
-            System.out.println(date);
-        }
+//        ResultSet resultSet = statement.executeQuery("Select * from test_school.newschedule");
+//        DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm");
+//        while (resultSet.next()) {
+////            System.out.println(df.format(resultSet.getTimestamp(4)));
+//            Timestamp date = resultSet.getTimestamp(4);
+//            System.out.println(date);
+//        }
+
+//        ResultSet resultSet = TestConnection.statement.executeQuery("Select * from test_school.grades where " +
+//                "studID = " + 0 + " and subjID = " + 0);
+//        String old_str = "";
+//        while (resultSet.next()) {
+//            old_str = resultSet.getString(4);
+//        }
+//
+//        String new_str = old_str + "," + String.valueOf(2);
+//        System.out.println("new str: " + new_str);
+//        System.out.println("UPDATE test_school.grades SET grades_list = " + "'" + new_str + "'");
+//        TestConnection.statement.executeUpdate("UPDATE test_school.grades SET grades_list = " + "'" + new_str + "'");
+
+        connection.setAutoCommit(false);
+//        ResultSet resultSet = statement.executeQuery("Select * from test_school.grades where " +
+//                "studID = " + 0 + " and subjID = " + 0);
+//        String old_str = "";
+//        int id = 0;
+//        while (resultSet.next()) {
+//            id = resultSet.getInt(1);
+//            old_str = resultSet.getString(4);
+//        }
+//
+//       String new_str = "'" + old_str + "," + 2 + "'";
+////       String new_str = old_str + "," + 2;
+////       String new_str = "\"" + old_str + "," + 2 + "\"";
+//        System.out.println(new_str);
+//
+////        String sql = "Update test_school.grades Set grades_list=" + new_str + " where gradeID=" + id;
+//
+//        String sql = "Update test_school.grades Set grades_list=" + new_str + " where studID ="
+//        + 0 + " and subjID =" + 0 + " and gradeID = " + id;
+
+        var rows = statement.execute("Update test_school.grades Set grades_list = '4,4,5,2' where gradeID = 0");
+//        System.out.println(sql);
+//        var rows = statement.execute(sql);
+        System.out.println("affected = " + rows);
+
     }
 
 }

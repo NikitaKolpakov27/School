@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -129,6 +130,9 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
                 case 6:
                     removeStudent();
                     break;
+                case 7:
+                    putAGrade();
+                    break;
                 default:
                     System.out.println("Неправильный ввод");
                     break;
@@ -188,7 +192,7 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
     }
 
     private void getStudentsGrades() {
-        System.out.println("Оценки учеников как класса вас интрсуют:");
+        System.out.println("Оценки учеников какого класса Вас интересуют?");
 
         for (Map.Entry<Integer, Klass> pair : Main.klassManager.klasses.entrySet()) {
             System.out.println((pair.getKey() + 1) +  ". " + pair.getValue().name);
@@ -267,7 +271,7 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
     }
 
     private void getKlassScheduleByKlassID(int klassID) {
-        Map<Integer, List<GregorianCalendar>> schedule = Main.klassManager.getSchedule(klassID);
+        Map<Integer, List<Timestamp>> schedule = Main.klassManager.getSchedule(klassID);
 
         if (schedule.isEmpty()) {
             System.out.println("Расписание для этого класса ещё не составлено.");
@@ -277,7 +281,7 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
         System.out.println("Расписание для " + Main.klassManager.klasses.get(klassID).name + ":");
         System.out.println("---------------------");
         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        for (Map.Entry<Integer, List<GregorianCalendar>> pair : schedule.entrySet()) {
+        for (Map.Entry<Integer, List<Timestamp>> pair : schedule.entrySet()) {
             List<String> dateList = new ArrayList<>();
             for (int i = 0; i < pair.getValue().size(); i++) {
                 dateList.add(df.format(pair.getValue().get(i).getTime()));
@@ -288,7 +292,7 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
         System.out.println();
     }
 
-// need to check!!!
+// need to check!!! upd 5.12 -> vrode norm
     private void addNewStudent() throws SQLException {
         System.out.println("Введите данные нового студента: ");
         System.out.println("*-*-*-*-*");
@@ -341,9 +345,11 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
 
     private void removeStudentByKlassID(int klassID) throws SQLException {
         System.out.println("Какого студента Вы хотите удалить?");
+        int count = 0;
 
         for (Student student : Main.klassManager.klasses.get(klassID).getStudents()) {
-            System.out.println(student.studID + ". " + student.toString());
+            System.out.println(count + ". " + student);
+            count++;
         }
         System.out.println("-1. Выход");
 
@@ -360,6 +366,72 @@ public class Authorisation {//TODO: СПРОСИТЬ, СТОИТ ЛИ МЕТОД
         } else {
             System.out.println("Неправильный ввод! Студента с таким studID не существует");
         }
+
+
+
+    }
+
+    private void putAGrade() throws SQLException {
+        System.out.println("Выберете класс: ");
+
+        for (Map.Entry<Integer, Klass> pair : Main.klassManager.klasses.entrySet()) {
+            System.out.println((pair.getKey()) +  ". " + pair.getValue().name);
+        }
+        System.out.println("-1. Выход;");
+
+        Scanner scn = new Scanner(System.in);
+        System.out.println("Введите номер: ");
+        int num = scn.nextInt();
+        System.out.println();
+
+        if (num >= 0 && num < Main.klassManager.klasses.entrySet().size()) {
+            putAGradeByKlassID(num);
+        } else if (num == -1) {
+            System.out.println("Работа с удалением студентов завершена");
+        } else {
+            System.out.println("Неправильный ввод! Класса с таким klassID не существует");
+        }
+    }
+
+    private void putAGradeByKlassID(int klassID) throws SQLException {
+        System.out.println("Какому студенту Вы хотите поставить оценку?");
+        int count = 0;
+
+        for (Student student : Main.klassManager.klasses.get(klassID).getStudents()) {
+            System.out.println(count + ". " + student);
+            count++;
+        }
+        System.out.println("-1. Выход");
+
+        Scanner scn = new Scanner(System.in);
+        System.out.println("Введите номер: ");
+        int stud = scn.nextInt();
+
+        System.out.println("По какому предмету Вы хотите поставить оценку?");
+        for (Map.Entry<Integer, Subject> pair: Main.subjectManager.subjects.entrySet()) {
+            System.out.println("ID = " + pair.getKey() + "; " + pair.getValue().toString() + ";");
+        }
+        System.out.println("-1. Выход");
+        int subj = scn.nextInt();
+
+        System.out.println("Какая оценка?");
+        short grade = scn.nextShort();
+
+        if (
+                (stud >= 0 && stud < Main.klassManager.klasses.get(klassID).getStudents().size()) &&
+                (subj >= 0 && subj < Main.subjectManager.subjects.entrySet().size()) &&
+                (grade > 1 && grade < 6)) {
+//            Main.studentManager.addGradeInDB(grade, subj, stud);
+            Main.studentManager.addGradeBySubject(grade, subj, stud);
+//            Main.studentManager.addFromSysToDB();
+        } else if (stud == -1 || subj == -1) {
+            System.out.println("Работа с добавлением оценок завершена");
+        } else if (grade < 0 || grade > 6) {
+            System.out.println("Неправильный ввод оценки");
+        } else {
+            System.out.println("Неправильный ввод!");
+        }
+
 
 
 

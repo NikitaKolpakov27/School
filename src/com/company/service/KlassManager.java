@@ -75,7 +75,7 @@ public class KlassManager {
         }
     }
 
-    public Map<Integer, List<GregorianCalendar>> getSchedule(int klassID) {
+    public Map<Integer, List<Timestamp>> getSchedule(int klassID) {
         return this.klasses.get(klassID).schedule;
     }
 
@@ -88,14 +88,14 @@ public class KlassManager {
         }
     }
 
-    public void editSchedule(int klassID, HashMap<Integer, List<GregorianCalendar>> schedule) {
+    public void editSchedule(int klassID, HashMap<Integer, List<Timestamp>> schedule) {
         this.klasses.get(klassID).schedule = schedule;
     }
 
     public void removeStudent(Student student, int klassID) throws SQLException {
         TestConnection.connection.setAutoCommit(false);
-        this.klasses.get(klassID).removeStudent(student);
         TestConnection.statement.executeUpdate("Delete from school.students where studID = " + student.studID);
+        this.klasses.get(klassID).removeStudent(student);
         TestConnection.connection.commit();
         TestConnection.connection.setAutoCommit(true);
 
@@ -200,7 +200,7 @@ public class KlassManager {
 
             dates.add(resultSet.getTimestamp(4));
 
-            this.klasses.get(resultSet.getInt(2)).sched.put(
+            this.klasses.get(resultSet.getInt(2)).schedule.put(
                     subjID, dates
             );
 

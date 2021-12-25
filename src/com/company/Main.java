@@ -199,28 +199,13 @@ public class Main {
         }
         System.out.println("-----------------");
 
-        Map<Integer, List<GregorianCalendar>> schedule = klassManager.getSchedule(0);
-        //added
-        Map<Integer, List<Timestamp>> sched = klassManager.klasses.get(0).sched;
-
-
-//        System.out.println("Расписание (для 7а): ");
-//        System.out.println("---------------------");
-//        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-//        for (Map.Entry<Integer, List<GregorianCalendar>> pair : schedule.entrySet()) {
-//            List<String> dateList = new ArrayList<>();
-//            for (int i = 0; i < pair.getValue().size(); i++) {
-//                dateList.add(df.format(pair.getValue().get(i).getTime()));
-//            }
-//            System.out.println(subjectManager.subjects.get(pair.getKey()) + " = " + dateList);
-//        }
-//        System.out.println("---------------------");
+        Map<Integer, List<Timestamp>> schedule = klassManager.getSchedule(0);
 
         // new, with timestamp
         System.out.println("Расписание (для 7а): ");
         System.out.println("---------------------");
         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        for (Map.Entry<Integer, List<Timestamp>> pair : sched.entrySet()) {
+        for (Map.Entry<Integer, List<Timestamp>> pair : schedule.entrySet()) {
             List<String> dateList = new ArrayList<>();
             for (int i = 0; i < pair.getValue().size(); i++) {
                 dateList.add(df.format(pair.getValue().get(i).getTime()));
@@ -263,10 +248,11 @@ public class Main {
         System.out.println("-----------------");
 
 
-        //изменинение оценок
+//        //изменинение оценок
 //        Student stud = studentManager.students.get(0);
 //        studentManager.addGradeBySubject((short)2, 0, 2);
 //        System.out.println();
+//        //
 //
 //        System.out.println("Оценки учеников(вне зависимости от класса):");
 //        System.out.println("-----------------");
@@ -286,20 +272,13 @@ public class Main {
 //                    str);
 //        }
 //        System.out.println("-----------------");
-//
-//        System.out.println("Предметы:");
-//        System.out.println("-----------------");
-//        for (Map.Entry<Integer, Subject> pair: subjectManager.subjects.entrySet()) {
-//            System.out.println("ID = " + pair.getKey() + "; " + pair.getValue().toString() + ";");
-//        }
-//        System.out.println("-----------------");
     }
 
 
 
     public static void main(String[] args) throws IOException, SQLException {
-        demonstration();
-//        Authorisation authorisation = new Authorisation();
-//        authorisation.greetings();
+//        demonstration();
+        Authorisation authorisation = new Authorisation();
+        authorisation.greetings();
     }
 }
